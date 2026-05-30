@@ -125,13 +125,6 @@ class ProfileController extends BaseController
 
     public function reSendOTP(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'type' => 'required|in:email,mobile',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return $this->sendError($validator->errors(), [], $this->validationErrorStatus);
-        // }
         $user = Auth::user();
 
         DB::beginTransaction();
@@ -153,7 +146,6 @@ class ProfileController extends BaseController
     public function verifyOTP(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            // 'type' => 'required|in:email,mobile',
             'otp' =>'required'
         ]);
 
