@@ -329,7 +329,7 @@ class ProfileController extends BaseController
                 ->mapWithKeys(fn($field) => [$field => $request->$field])
                 ->toArray();
 
-            $result = $this->userRepositoryInterface->update($user->id,$updateUser);
+            $result = $this->userDetailsRepositoryInterface->updateByColumn(['user_id' => $user->id], $updateUserDetails);
 
             DB::commit();
             return ApiResponseClass::sendResponseCode(null, $this->noContentStatus, 'User updated successfully.');
