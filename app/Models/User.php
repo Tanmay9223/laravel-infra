@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\Contracts\OAuthenticatable;
 use App\Notifications\ResetPassword as CustomResetPasswordNotification;
 use Laravel\Passport\HasApiTokens;
 
