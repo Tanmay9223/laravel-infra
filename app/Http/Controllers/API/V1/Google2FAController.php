@@ -28,11 +28,6 @@ class Google2FAController extends BaseController
             ->select('email_verification_status')
             ->first();
 
-            // if (!$kyc || $kyc->email_verification_status != 1) {
-            //     DB::rollBack();
-            //     return $this->sendError('Email not verified. Please verify your email before using 2FA.', 'Email not verified.');
-            // }
-
             // Dynamically fetch the user or admin based on the authenticated user
             $model = $user instanceof Admin
                 ? Admin::where('id', $user->id)->with('google2faKey')->first()
@@ -66,53 +61,6 @@ class Google2FAController extends BaseController
             return ApiResponseClass::rollback($ex);
         }
     }
-
-    // public function enable2FA(Request $request)
-    // {
-    //     DB::beginTransaction();
-
-    //     $validator = Validator::make($request->all(), [
-    //         'key' => 'required',
-    //         'otp' => 'required',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return $this->sendError($validator->errors(), [], $this->validationErrorStatus);
-    //     }
-
-    //     try {
-    //         $user = Auth::user(); // Works for both admin and user
-    //         $google2Fa = new Google2FA();
-
-    //         $key = $request->input('key');
-    //         $code = $request->input('otp');
-
-    //         if (!$google2Fa->verifyKey($key, $code, 1)) {
-    //             DB::rollBack();
-    //             return $this->sendError('Invalid OTP. Please try again.', 'Invalid OTP.');
-    //         }
-
-    //         // Determine if user is admin or regular user
-    //         if ($user instanceof Admin) {
-    //             $user->google2faKey()->create(['google_2fa_key' => $key]);
-    //             $user->update(['is_google2fa_enable' => 1]);
-    //         } elseif ($user instanceof User) {
-    //             $user->google2faKey()->create(['google_2fa_key' => $key]);
-    //             $user->update(['is_google2fa_enable' => 1]);
-    //         } else {
-    //             DB::rollBack();
-    //             return $this->sendError('User type not recognized.', 'Failed to enable 2FA.');
-    //         }
-
-    //         DB::commit();
-
-    //         return ApiResponseClass::sendResponse(null, '2FA enabled successfully.', $this->successStatus);
-
-    //     } catch (\Exception $ex) {
-    //         DB::rollBack();
-    //         return ApiResponseClass::rollback($ex);
-    //     }
-    // }
 
     public function enable2FA(Request $request)
     {
@@ -237,49 +185,6 @@ class Google2FAController extends BaseController
         return ApiResponseClass::rollback($ex);
     }
     }
-
-    // public function disable2FA(Request $request)
-    // {
-    //     DB::beginTransaction();
-
-    //     // Validate the request
-    //     $validator = Validator::make($request->all(), [
-    //         'current_password' => 'required',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return $this->sendError('Validation Error.', $validator->errors());
-    //     }
-
-    //     $user = Auth::user();
-
-    //     // Verify the current password
-    //     if (!Hash::check($request->current_password, $user->password)) {
-    //         return $this->sendError('Current password is incorrect.', ['error' => 'Current password is incorrect.']);
-    //     }
-
-    //     try {
-    //         // Determine if the user is an Admin or User
-    //         $model = $user instanceof Admin ? Admin::find($user->id) : User::find($user->id);
-
-    //         // Ensure the user exists
-    //         if (!$model) {
-    //             DB::rollBack();
-    //             return $this->sendError('User not found.', 'Error in 2FA disable. Please try again.');
-    //         }
-
-    //         // Delete the 2FA key and disable 2FA
-    //         $model->google2faKey()->delete();
-    //         $model->update(['is_google2fa_enable' => 0]);
-
-    //         DB::commit();
-    //         return ApiResponseClass::sendResponse(null, '2FA disabled successfully.', $this->successStatus);
-
-    //     } catch (\Exception $ex) {
-    //         DB::rollBack();
-    //         return ApiResponseClass::rollback($ex);
-    //     }
-    // }
 
     public function disable2FA(Request $request)
     {
