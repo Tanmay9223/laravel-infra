@@ -30,7 +30,9 @@ class AppServiceProvider extends ServiceProvider
             $countryCode = $parameters[0]; // Assuming country_code is passed as a parameter
 
             // Retrieve the phone_length for the given country code
-            $country = Country::where('short_code', $countryCode)->first();
+            $country = \Illuminate\Support\Facades\Cache::remember("country_phone_length_{$countryCode}", now()->addHours(24), function () use ($countryCode) {
+                return Country::where('short_code', $countryCode)->first();
+            });
 
             // Check if the country exists and if the phone length matches
             if ($country && strlen($value) === (int) $country->phone_length) {
@@ -45,7 +47,9 @@ class AppServiceProvider extends ServiceProvider
             $countryCode = $parameters[0];
 
             // Retrieve the phone length for the given country code
-            $country = Country::where('short_code', $countryCode)->first();
+            $country = \Illuminate\Support\Facades\Cache::remember("country_phone_length_{$countryCode}", now()->addHours(24), function () use ($countryCode) {
+                return Country::where('short_code', $countryCode)->first();
+            });
 
             if ($country) {
                 $expectedLength = $country->phone_length;
