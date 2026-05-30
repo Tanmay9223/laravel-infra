@@ -15,8 +15,8 @@ Route::fallback(function (Request $request) {
 
 Route::post('login')->name('login');
 
-Route::prefix('v1')->as('v1:')->group(base_path('routes/v1/admin.php'));
-Route::prefix('v1')->as('v1:')->group(base_path('routes/v1/user.php'));
+Route::prefix('v1')->as('v1:')->group(base_path('routes/V1/admin.php'));
+Route::prefix('v1')->as('v1:')->group(base_path('routes/V1/user.php'));
 Route::prefix('v1')->as('v1:')->group(function () {
 
     Route::get('country-list', [ListController::class, 'countryList'])->name('country_list');
