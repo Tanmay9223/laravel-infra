@@ -114,11 +114,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Account::class, 'user_trade_accounts', 'user_id', 'account_id');
     }
 
-    // public function referrals()
-    // {
-    //     return $this->hasMany(User::class, 'sponsor_by')->where('stage_status', '<', 7);
-    // }
-
     public function getIsAdminAttribute()
 {
     return $this->role === 'admin'; // or however you define admin users
