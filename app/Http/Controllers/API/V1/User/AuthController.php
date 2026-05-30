@@ -317,9 +317,10 @@ class AuthController extends BaseController
 
     public function resetPassword(Request $request)
     {
-        $input = $request->only('token', 'password', 'password_confirmation');
+        $input = $request->only('email', 'token', 'password', 'password_confirmation');
 
         $validator = Validator::make($input, [
+            'email' => 'required|email',
             'token' => 'required',
             'password' => 'required|confirmed|string|min:8|max:16|
                         regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|
@@ -333,11 +334,9 @@ class AuthController extends BaseController
             return $this->sendError($validator->errors(), [], $this->validationErrorStatus);
         }
 
-        $resetRecord = DB::table('password_reset_tokens')->get()->first(function ($record) use ($input) {
-            return Hash::check($input['token'], $record->token);
-        });
+        $resetRecord = DB::table('password_reset_tokens')->where('email', $input['email'])->first();
 
-        if (!$resetRecord) {
+        if (!$resetRecord || !Hash::check($input['token'], $resetRecord->token)) {
             return $this->sendError('Invalid or expired token.', [], 400);
         }
 
